@@ -32,11 +32,13 @@ template = Template("""
             margin-top: 20px;
             background-color: #fff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            table-layout: fixed;
         }
         /* Styling for all table headers and cells */
         th, td {
             padding: 10px;
             text-align: center;
+            word-wrap: break-word;
         }
         /* Fix the leftmost column (round numbers) to a minimal width */
         table th:first-child,
@@ -103,6 +105,14 @@ template = Template("""
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Styling for the scoring image to scale to the container's width */
+        .scoring-image {
+            width: 100%;
+            max-width: 100%;
+            display: block;
+            margin-top: 20px;
+            border: 1px solid #ddd;
         }
     </style>
     <script>
@@ -187,7 +197,7 @@ template = Template("""
     <div id="playerPopup">
         <div>
             <h3>Add Player Names as Comma Separated List</h3>
-            <input type="text" id="player" placeholder="Enter player names (comma-separated)">
+            <input type="text" id="player" placeholder="Enter player names (ex. Meg, JH, James)">
             <button onclick="addPlayer()">Start Game</button>
         </div>
     </div>
@@ -224,6 +234,8 @@ template = Template("""
         <button onclick="resetGame()">Reset Game</button>
         <a class="button-link" href="/rules.pdf" target="_blank">Game Rules</a>
     </div>
+    <!-- Scoring image added below all other content -->
+    <img class="scoring-image" src="/scoring.jpeg" alt="Scoring Image">
 </body>
 </html>
 """)
@@ -266,3 +278,9 @@ async def reset_game():
 async def get_rules():
     # "rules.pdf" should be located in the same directory as this script.
     return FileResponse("rules.pdf", media_type="application/pdf")
+
+# Endpoint to serve the scoring image.
+@app.get("/scoring.jpeg")
+async def get_scoring_image():
+    # "scoring.jpeg" should be located in the same directory as this script.
+    return FileResponse("scoring.jpeg", media_type="image/jpeg")
